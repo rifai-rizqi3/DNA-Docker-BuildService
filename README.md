@@ -36,3 +36,61 @@ COPY logs logs
 CMD ["./payment"]
 
 ```
+> Masuk ke file docker compose nya biasanya format nya .yml
+> Tambahkan code service di dalam yml 
+```
+payment:
+    build: /root/simotor/service_dev/payment
+    container_name: simotor_service_payment
+    image: simotor_service_payment
+    ports:
+      - 8825:8825 < Port Static
+    restart: always
+    networks:
+      simotor:
+        ipv4_address: 172.20.0.25 < IP Static
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/root/simotor/service_dev/payment:/logs"
+```
+> Lalu setting haproxynya di folder haproxy
+> Tambahkan code di file config haproxy
+```
+acl PATH_payment path_beg -i /api/payment
+```
+```
+use_backend backend_payment if  PATH_payment
+```
+```
+backend backend_payment
+ balance roundrobin
+    option forwardfor
+    http-request set-header X-Forwarded-Port %[dst_port]
+    http-request add-header X-Forwarded-Proto https if { ssl_fc }
+    server s1 172.20.0.25:8825 check
+```
+> Lalu build compose nya
+```
+docker-compose up -d --build <nama-folder>
+```
+> Pastikan berhasil dengan perintah
+```
+docker-compose logs -f <nama-folder>
+```
+> Lalu restart haproxynya
+```
+docker restart <namacontainerlengkap>
+```
+> Finish!
+# Note
+Perintah penting docker :
+```
+Melihat list Container      	    : docker ps -a
+Melihat List Container Status       : docker container ls -a
+Melihat Image Docker                : docker images
+Stop service 						: docker-compose stop <nama-folder>
+Build Service 						: docker-compose up -d --build <nama-folder>
+Log									: docker-compose logs -f <nama-folder>
+restart haproxy	    				: docker restart <namacontainerlengkap>
+```
