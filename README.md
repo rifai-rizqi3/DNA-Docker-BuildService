@@ -86,11 +86,13 @@ docker restart <namacontainerlengkap>
 # Note
 Perintah penting docker :
 ```
-Melihat list Container      	    : docker ps -a
-Melihat List Container Status       : docker container ls -a
-Melihat Image Docker                : docker images
-Stop service 						: docker-compose stop <nama-folder>
-Build Service 						: docker-compose up -d --build <nama-folder>
-Log									: docker-compose logs -f <nama-folder>
-restart haproxy	    				: docker restart <namacontainerlengkap>
+Melihat list Container          : docker ps -a
+Melihat List Container Status   : docker container ls -a
+Melihat Image Docker            : docker images
+```
+```
+Stop service 	: docker-compose stop <nama-folder>
+Build Service 	: docker-compose up -d --build <nama-folder>
+Log		: docker-compose logs -f <nama-folder>
+Restart haproxy	: docker restart <namacontainerlengkap>
 ```
